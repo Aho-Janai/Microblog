@@ -1,11 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, \
+    TextAreaField
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, \
+    Length
 import sqlalchemy as sa
 from app import db
 from app.models import User
-from wtforms import TextAreaField
-from wtforms.validators import Length
 
 
 class LoginForm(FlaskForm):
@@ -13,6 +13,7 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -33,7 +34,8 @@ class RegistrationForm(FlaskForm):
             User.email == email.data))
         if user is not None:
             raise ValidationError('Please use a different email address.')
-        
+
+
 class EditProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     about_me = TextAreaField('About me', validators=[Length(min=0, max=140)])
@@ -49,3 +51,7 @@ class EditProfileForm(FlaskForm):
                 User.username == username.data))
             if user is not None:
                 raise ValidationError('Please use a different username.')
+
+
+class EmptyForm(FlaskForm):
+    submit = SubmitField('Submit')
