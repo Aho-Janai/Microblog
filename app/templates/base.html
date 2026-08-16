@@ -6,9 +6,11 @@
         {% else %}
         <title>Welcome to Microblog</title>
         {% endif %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='dist/output.css') }}">  
     </head>
+    
+</h1>
     <body>
-        <div>
             Microblog:
             <a href="{{ url_for('index') }}">Home</a>
             <a href="{{ url_for('explore') }}">Explore</a>
