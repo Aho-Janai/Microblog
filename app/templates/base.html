@@ -1,36 +1,46 @@
 <!doctype html>
 <html>
-    <head>
-        {% if title %}
-        <title>{{ title }} - Microblog</title>
-        {% else %}
-        <title>Welcome to Microblog</title>
-        {% endif %}
-        <link rel="stylesheet" href="{{ url_for('static', filename='dist/output.css') }}">  
-    </head>
-    
-</h1>
-    <body>
-            Microblog:
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('explore') }}">Explore</a>
+<head>
+    {% if title %}
+    <title>{{ title }} - Microblog</title>
+    {% else %}
+    <title>Welcome to Microblog</title>
+    {% endif %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/output.css') }}">
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <nav class="flex justify-between items-center p-4 bg-gray-800 text-white">
+        <div class="flex gap-4 items-center">
+            <span class="font-bold text-lg">Microblog</span>
+            <a href="{{ url_for('index') }}" class="hover:text-blue-400">Home</a>
+            <a href="{{ url_for('explore') }}" class="hover:text-blue-400">Explore</a>
+        </div>
+        <div class="flex gap-4 items-center">
             {% if current_user.is_anonymous %}
-            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('login') }}" class="hover:text-blue-400">Login</a>
             {% else %}
-            <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
+            <a href="{{ url_for('user', username=current_user.username) }}" class="hover:text-blue-400">Profile</a>
+            <a href="{{ url_for('logout') }}" class="hover:text-blue-400">Logout</a>
             {% endif %}
         </div>
-        <hr>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
+    </nav>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="max-w-2xl mx-auto mt-4 px-4">
+        <ul class="space-y-2">
             {% for message in messages %}
-            <li>{{ message }}</li>
+            <li class="bg-yellow-100 border border-yellow-300 text-yellow-800 text-sm rounded-lg px-4 py-2">
+                {{ message }}
+            </li>
             {% endfor %}
         </ul>
-        {% endif %}
-        {% endwith %}
-        {% block content %}{% endblock %}
-  </body>
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+</body>
 </html>

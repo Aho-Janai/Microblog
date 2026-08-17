@@ -1,52 +1,68 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <table>
-        <tr valign="top">
-            <td><img src="{{ user.avatar(128) }}"></td>
-             <td>
-                <h1>User: {{ user.username }}</h1>
-                {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
-                {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
-                {% if user == current_user %}
-                <p><a href="{{ url_for('edit_profile') }}">Edit your profile</a></p>
-                {% endif %}
-            </td>
-        </tr>
-    </table>
-    <hr>
-    {% for post in posts %}
-        {% include '_post.html' %}
-    {% endfor %}
-    {% if prev_url %}
-    <a href="{{ prev_url }}">Newer posts</a>
-    {% endif %}
-    {% if next_url %}
-    <a href="{{ next_url }}">Older posts</a>
-    {% endif %}
+<div class="max-w-2xl mx-auto px-4 py-8 space-y-6">
 
+    <!-- Profile header -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 flex gap-6 items-start">
+        <img src="{{ user.avatar(128) }}" class="w-24 h-24 rounded-full object-cover border border-gray-200">
 
-<h1>User: {{ user.username }}</h1>
-        {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
-        {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
-        <p>{{ user.followers_count() }} followers, {{ user.following_count() }} following.</p>
-        {% if user == current_user %}
-        <p><a href="{{ url_for('edit_profile') }}">Edit your profile</a></p>
-        {% elif not current_user.is_following(user) %}
-        <p>
-            <form action="{{ url_for('follow', username=user.username) }}" method="post">
+        <div class="flex-1 space-y-2">
+            <h1 class="text-2xl font-bold text-gray-900">{{ user.username }}</h1>
+
+            {% if user.about_me %}
+            <p class="text-gray-700">{{ user.about_me }}</p>
+            {% endif %}
+
+            {% if user.last_seen %}
+            <p class="text-sm text-gray-500">Last seen on: {{ user.last_seen }}</p>
+            {% endif %}
+
+            <p class="text-sm text-gray-600">
+                <span class="font-semibold text-gray-900">{{ user.followers_count() }}</span> followers,
+                <span class="font-semibold text-gray-900">{{ user.following_count() }}</span> following
+            </p>
+
+            {% if user == current_user %}
+            <a href="{{ url_for('edit_profile') }}"
+               class="inline-block mt-2 text-sm text-blue-600 hover:underline font-medium">
+                Edit your profile
+            </a>
+            {% elif not current_user.is_following(user) %}
+            <form action="{{ url_for('follow', username=user.username) }}" method="post" class="mt-2">
                 {{ form.hidden_tag() }}
-                {{ form.submit(value='Follow') }}
+                {{ form.submit(value='Follow', class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg px-4 py-1.5 transition duration-200") }}
             </form>
-        </p>
+            {% else %}
+            <form action="{{ url_for('unfollow', username=user.username) }}" method="post" class="mt-2">
+                {{ form.hidden_tag() }}
+                {{ form.submit(value='Unfollow', class="bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm font-medium rounded-lg px-4 py-1.5 transition duration-200") }}
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Posts -->
+    <div class="space-y-4">
+        {% for post in posts %}
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
+            {% include '_post.html' %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-between pt-4 border-t border-gray-200">
+        {% if prev_url %}
+        <a href="{{ prev_url }}" class="text-blue-600 hover:underline font-medium">&larr; Newer posts</a>
         {% else %}
-        <p>
-            <form action="{{ url_for('unfollow', username=user.username) }}" method="post">
-                {{ form.hidden_tag() }}
-                {{ form.submit(value='Unfollow') }}
-            </form>
-        </p>
+        <span></span>
         {% endif %}
-        
-{% endblock %}
 
+        {% if next_url %}
+        <a href="{{ next_url }}" class="text-blue-600 hover:underline font-medium">Older posts &rarr;</a>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
