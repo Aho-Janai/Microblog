@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto mt-8 px-4">
+    <h1 class="text-2xl font-bold mb-6">Users {{ user.username }} follows</h1>
+
+    {% if following %}
+        <ul class="divide-y divide-gray-200 border-t border-b border-gray-200">
+            {% for followed_user in following %}
+            <li class="flex items-center py-3">
+                <img src="{{ followed_user.avatar(40) }}" alt="{{ followed_user.username }}"
+                     class="rounded-full w-10 h-10 mr-3">
+                <a href="{{ url_for('user', username=followed_user.username) }}"
+                   class="text-blue-600 hover:underline font-medium">
+                    {{ followed_user.username }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-gray-500 mt-4">Not following anyone yet.</p>
+    {% endif %}
+
+    <div class="flex justify-between mt-6">
+        <div>
+            {% if prev_url %}
+            <a href="{{ prev_url }}" class="text-blue-600 hover:underline">&larr; Newer</a>
+            {% endif %}
+        </div>
+        <div>
+            {% if next_url %}
+            <a href="{{ next_url }}" class="text-blue-600 hover:underline">Older &rarr;</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -202,3 +202,35 @@ def unfollow(username):
         return redirect(url_for('user', username=username))
     else:
         return redirect(url_for('index'))
+
+@app.route('/user/<username>/followers')
+@login_required
+def followers(username):
+    user = db.first_or_404(sa.select(User).where(User.username == username))
+    page = request.args.get('page', 1, type=int)
+    query = user.followers.select().order_by(User.username)
+    followers = db.paginate(query, page=page,
+                             per_page=app.config['POSTS_PER_PAGE'],
+                             error_out=False)
+    next_url = url_for('followers', username=user.username, page=followers.next_num) \
+        if followers.has_next else None
+    prev_url = url_for('followers', username=user.username, page=followers.prev_num) \
+        if followers.has_prev else None
+    return render_template('followers.html', user=user, followers=followers.items,
+                            next_url=next_url, prev_url=prev_url)
+
+@app.route('/user/<username>/following')
+@login_required
+def following(username):
+    user = db.first_or_404(sa.select(User).where(User.username == username))
+    page = request.args.get('page', 1, type=int)
+    query = user.following.select().order_by(User.username)
+    following = db.paginate(query, page=page,
+                             per_page=app.config['POSTS_PER_PAGE'],
+                             error_out=False)
+    next_url = url_for('following', username=user.username, page=following.next_num) \
+        if following.has_next else None
+    prev_url = url_for('following', username=user.username, page=following.prev_num) \
+        if following.has_prev else None
+    return render_template('following.html', user=user, following=following.items,
+                            next_url=next_url, prev_url=prev_url)
