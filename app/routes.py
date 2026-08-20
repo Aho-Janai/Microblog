@@ -234,3 +234,8 @@ def following(username):
         if following.has_prev else None
     return render_template('following.html', user=user, following=following.items,
                             next_url=next_url, prev_url=prev_url)
+
+@app.route('/random_features')
+@login_required
+def random_features():
+    return render_template('random_features.html', title='Random Features')

@@ -15,6 +15,7 @@
             <span class="font-bold text-lg">Microblog</span>
             <a href="{{ url_for('index') }}" class="hover:text-blue-400">Home</a>
             <a href="{{ url_for('explore') }}" class="hover:text-blue-400">Explore</a>
+            <a href="{{ url_for('random_features') }}" class="hover:text-blue-400">Random Features</a>
         </div>
         <div class="flex gap-4 items-center">
             {% if current_user.is_anonymous %}
